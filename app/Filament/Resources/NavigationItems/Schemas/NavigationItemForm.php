@@ -31,6 +31,7 @@ class NavigationItemForm
                 TextInput::make('sort_order')
                     ->required()
                     ->numeric()
+                    ->minValue(0)
                     ->default(0),
                 Toggle::make('is_active')
                     ->required(),

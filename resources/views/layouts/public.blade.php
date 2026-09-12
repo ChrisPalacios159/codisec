@@ -3,12 +3,12 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Información pública del Comité Distrital de Seguridad Ciudadana de Surquillo">
+    <meta name="description" content="{{ $siteSettings->get('site_tagline', 'Información pública del Comité Distrital de Seguridad Ciudadana de Surquillo') }}">
     <link rel="icon" href="{{ asset('storage/legacy/2016/07/favicon1.png') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-    <title>@yield('title', 'CODISEC Surquillo')</title>
+    <title>@yield('title', $siteSettings->get('site_name', 'CODISEC Surquillo'))</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="public-site min-h-screen antialiased">
@@ -35,8 +35,8 @@
 
     <header class="public-header">
         <div class="public-header-inner">
-            <a href="{{ route('home') }}" class="public-logo" aria-label="Municipalidad de Surquillo - CODISEC">
-                <img src="{{ asset('storage/legacy/2016/07/mdslogo111c1.png') }}" alt="Municipalidad Distrital de Surquillo">
+            <a href="{{ route('home') }}" class="public-logo" aria-label="{{ $siteSettings->get('municipality', 'Municipalidad Distrital de Surquillo') }} - {{ $siteSettings->get('site_name', 'CODISEC Surquillo') }}">
+                <img src="{{ asset('storage/legacy/2016/07/mdslogo111c1.png') }}" alt="{{ $siteSettings->get('municipality', 'Municipalidad Distrital de Surquillo') }}">
             </a>
 
             <div class="public-tools">
@@ -116,7 +116,7 @@
 
     <footer class="public-footer">
         <div class="public-container footer-inner">
-            <p>© {{ date('Y') }} Municipalidad Distrital de Surquillo · CODISEC</p>
+            <p>© {{ date('Y') }} {{ $siteSettings->get('municipality', 'Municipalidad Distrital de Surquillo') }} · {{ $siteSettings->get('site_name', 'CODISEC Surquillo') }}</p>
             <nav aria-label="Enlaces del pie"><a href="{{ route('documents.index') }}">Documentos</a><a href="{{ route('contact.create') }}">Contacto</a><a href="{{ url('/admin') }}">Mantenimiento</a></nav>
         </div>
     </footer>

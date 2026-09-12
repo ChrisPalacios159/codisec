@@ -9,7 +9,7 @@
         <div class="grid gap-5 md:grid-cols-2">
             @forelse($activities as $activity)
                 <article class="overflow-hidden border border-slate-200 bg-slate-50">
-                    @if($activity->cover_image)<img src="{{ $activity->cover_image }}" alt="" class="h-48 w-full object-cover" loading="lazy">@else<div class="h-2 bg-cod-teal"></div>@endif
+                    @if($activity->cover_image_url)<img src="{{ $activity->cover_image_url }}" alt="" class="h-48 w-full object-cover" loading="lazy">@else<div class="h-2 bg-cod-teal"></div>@endif
                     <div class="p-5">
                         @if($activity->occurred_at)<time class="text-xs font-bold text-cod-teal">{{ $activity->occurred_at->translatedFormat('d \d\e F \d\e Y') }}</time>@endif
                         <h2 class="mt-2 text-xl font-extrabold text-cod-navy">{{ $activity->title }}</h2>

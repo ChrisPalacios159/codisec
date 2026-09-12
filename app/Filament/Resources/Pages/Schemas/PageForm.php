@@ -22,7 +22,7 @@ class PageForm
             Select::make('status')->label('Estado')->options(['draft' => 'Borrador', 'published' => 'Publicado'])->required(),
             Select::make('template')->label('Plantilla')->options(['default' => 'Página estándar', 'actividades' => 'Actividades', 'sesiones' => 'Sesiones'])->required(),
             DateTimePicker::make('published_at')->label('Fecha de publicación'),
-            TextInput::make('menu_order')->label('Orden')->numeric()->default(0),
+            TextInput::make('menu_order')->label('Orden')->numeric()->minValue(0)->default(0),
             Toggle::make('is_featured')->label('Destacar en portada'),
         ]);
     }
