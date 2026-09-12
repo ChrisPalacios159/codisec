@@ -38,6 +38,8 @@ npm run build
 .\scripts\Export-Database.ps1
 ```
 
+En producción, después de establecer el `.env` definitivo, se puede ejecutar `php artisan optimize`. En desarrollo y antes de las pruebas debe mantenerse la configuración sin caché.
+
 El document root de IIS debe apuntar a `public`, nunca a la raíz del proyecto. El cambio de binding del WordPress de producción no forma parte del staging y requiere respaldo, pruebas y aprobación expresa.
 
 ## Modelo migrado

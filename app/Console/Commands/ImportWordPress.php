@@ -361,6 +361,9 @@ class ImportWordPress extends Command
     private function sanitizeHtml(string $html): string
     {
         $html = preg_replace('/\[\/?vc_[^\]]+\]/iu', '', $html) ?? $html;
+        $html = preg_replace('#<(script|object|embed)\b[^>]*>.*?</\1>#isu', '', $html) ?? $html;
+        $html = preg_replace('/\s+on[a-z]+\s*=\s*(["\']).*?\1/isu', '', $html) ?? $html;
+        $html = preg_replace('/\s+(href|src)\s*=\s*(["\'])\s*javascript:.*?\2/isu', '', $html) ?? $html;
 
         return preg_replace_callback('/(href|src)=(["\'])(.*?)\2/iu', fn (array $match) => $match[1].'='.$match[2].$this->normalizeUrl(html_entity_decode($match[3], ENT_QUOTES | ENT_HTML5, 'UTF-8')).$match[2], $html) ?? $html;
     }

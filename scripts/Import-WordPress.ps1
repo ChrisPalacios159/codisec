@@ -33,5 +33,4 @@ try {
     Remove-Item Env:WORDPRESS_DB_HOST, Env:WORDPRESS_DB_PORT, Env:WORDPRESS_DB_DATABASE, Env:WORDPRESS_DB_USERNAME, Env:WORDPRESS_DB_PASSWORD, Env:WORDPRESS_DB_PREFIX -ErrorAction SilentlyContinue
 }
 
-& $PhpPath (Join-Path $ProjectRoot 'artisan') config:cache
 if ($ExitCode -ne 0) { exit $ExitCode }
