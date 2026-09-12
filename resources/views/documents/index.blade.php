@@ -1,6 +1,29 @@
 @extends('layouts.public')
+
 @section('title', 'Documentos | CODISEC Surquillo')
+@section('page_heading', 'Repositorio documental')
+
 @section('content')
-<header class="bg-cod-blue text-white"><div class="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8"><h1 class="text-4xl font-black">Repositorio documental</h1><p class="mt-3 text-blue-100">Planes, evaluaciones, actas, informes y normativa de seguridad ciudadana.</p></div></header>
-<div class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8"><form class="grid gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:grid-cols-[1fr_280px_auto]"><input name="q" value="{{ request('q') }}" placeholder="Buscar por título…" class="rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-cod-teal"><select name="categoria" class="rounded-xl border border-slate-300 px-4 py-3"><option value="">Todas las categorías</option>@foreach($categories as $category)<option value="{{ $category->slug }}" @selected(request('categoria') === $category->slug)>{{ $category->name }}</option>@endforeach</select><button class="rounded-xl bg-cod-teal px-6 py-3 font-bold text-white">Buscar</button></form><div class="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">@forelse($documents as $document)<x-document-card :document="$document" />@empty<div class="rounded-2xl bg-white p-8 text-slate-500 md:col-span-2 lg:col-span-3">No se encontraron documentos con esos criterios.</div>@endforelse</div><div class="mt-10">{{ $documents->links() }}</div></div>
+    <section class="public-content-card">
+        <p class="mb-6 text-base">Planes, evaluaciones, actas, informes y normativa de seguridad ciudadana.</p>
+        <form class="grid gap-3 border border-slate-200 bg-slate-50 p-4 sm:grid-cols-[1fr_230px_auto]">
+            <input name="q" value="{{ request('q') }}" placeholder="Buscar por título..." class="border border-slate-300 bg-white px-4 py-3 outline-none focus:border-cod-teal">
+            <select name="categoria" class="border border-slate-300 bg-white px-4 py-3">
+                <option value="">Todas las categorías</option>
+                @foreach($categories as $category)
+                    <option value="{{ $category->slug }}" @selected(request('categoria') === $category->slug)>{{ $category->name }}</option>
+                @endforeach
+            </select>
+            <button class="bg-cod-teal px-6 py-3 font-bold text-white hover:bg-cod-blue">Buscar</button>
+        </form>
+
+        <div class="mt-7 grid gap-5 md:grid-cols-2">
+            @forelse($documents as $document)
+                <x-document-card :document="$document" />
+            @empty
+                <p class="border border-slate-200 bg-slate-50 p-6 md:col-span-2">No se encontraron documentos con esos criterios.</p>
+            @endforelse
+        </div>
+        <div class="mt-9">{{ $documents->links() }}</div>
+    </section>
 @endsection

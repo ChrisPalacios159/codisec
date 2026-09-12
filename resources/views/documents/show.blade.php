@@ -1,5 +1,20 @@
 @extends('layouts.public')
+
 @section('title', $document->title.' | CODISEC Surquillo')
+@section('page_heading', 'Documento')
+@section('page_parent', $document->category?->name ?? 'Repositorio')
+
 @section('content')
-<div class="mx-auto max-w-4xl px-4 py-14 sm:px-6 lg:px-8"><a href="{{ route('documents.index') }}" class="text-sm font-bold text-cod-teal">← Volver al repositorio</a><article class="mt-6 rounded-2xl bg-white p-7 shadow-sm sm:p-10"><span class="rounded-full bg-teal-50 px-3 py-1 text-xs font-bold text-cod-teal">{{ $document->category?->name ?? 'Documento' }}</span><h1 class="mt-5 text-3xl font-black leading-tight text-cod-navy sm:text-4xl">{{ $document->title }}</h1>@if($document->published_at)<p class="mt-3 text-sm text-slate-500">Publicado el {{ $document->published_at->translatedFormat('d \d\e F \d\e Y') }}</p>@endif@if($document->description)<div class="content-body mt-8">{!! $document->description !!}</div>@endif@if($document->public_url)<a href="{{ $document->public_url }}" target="_blank" rel="noopener" class="mt-8 inline-flex rounded-xl bg-cod-teal px-6 py-3 font-black text-white hover:bg-cod-blue">Abrir o descargar documento ↗</a>@else<p class="mt-8 rounded-xl bg-amber-50 p-4 text-amber-900">El archivo no está disponible en este momento.</p>@endif</article></div>
+    <article class="public-content-card">
+        <a href="{{ route('documents.index') }}" class="text-sm font-bold text-cod-teal">← Volver al repositorio</a>
+        <span class="mt-6 block text-xs font-bold uppercase tracking-wide text-cod-teal">{{ $document->category?->name ?? 'Documento' }}</span>
+        <h1 class="mt-2 text-3xl font-black leading-tight text-cod-navy">{{ $document->title }}</h1>
+        @if($document->published_at)<p class="mt-3 text-sm text-slate-500">Publicado el {{ $document->published_at->translatedFormat('d \d\e F \d\e Y') }}</p>@endif
+        @if($document->description)<div class="content-body mt-8">{!! $document->description !!}</div>@endif
+        @if($document->public_url)
+            <a href="{{ $document->public_url }}" target="_blank" rel="noopener" class="mt-8 inline-flex bg-cod-teal px-6 py-3 font-black text-white hover:bg-cod-blue">Abrir o descargar documento ↗</a>
+        @else
+            <p class="mt-8 bg-amber-50 p-4 text-amber-900">El archivo no está disponible en este momento.</p>
+        @endif
+    </article>
 @endsection

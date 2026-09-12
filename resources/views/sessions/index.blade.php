@@ -1,5 +1,21 @@
 @extends('layouts.public')
+
 @section('title', 'Sesiones | CODISEC Surquillo')
+@section('page_heading', 'Sesiones del CODISEC')
+
 @section('content')
-<header class="bg-cod-blue text-white"><div class="mx-auto max-w-5xl px-4 py-14 sm:px-6 lg:px-8"><h1 class="text-4xl font-black">Sesiones del CODISEC</h1><p class="mt-3 text-blue-100">Actas, acuerdos y documentos de las reuniones del comité.</p></div></header><div class="mx-auto max-w-5xl px-4 py-12 sm:px-6 lg:px-8"><div class="grid gap-4">@forelse($sessions as $session)<article class="flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:flex-row sm:items-center sm:justify-between"><div><span class="text-xs font-bold uppercase text-cod-teal">{{ data_get($session->metadata, 'year', 'Sesión') }}</span><h2 class="mt-1 font-bold text-cod-navy">{{ $session->title }}</h2></div>@if($session->external_url || $session->document_path)<a href="{{ $session->external_url ?: asset('storage/'.$session->document_path) }}" target="_blank" rel="noopener" class="shrink-0 rounded-lg bg-cod-teal px-4 py-2 text-center text-sm font-bold text-white">Ver acta ↗</a>@endif</article>@empty<p>No hay sesiones disponibles.</p>@endforelse</div><div class="mt-8">{{ $sessions->links() }}</div></div>
+    <section class="public-content-card">
+        <p class="mb-6">Actas, acuerdos y documentos de las reuniones del comité.</p>
+        <div class="grid gap-3">
+            @forelse($sessions as $session)
+                <article class="flex flex-col gap-4 border border-slate-200 bg-slate-50 p-5 sm:flex-row sm:items-center sm:justify-between">
+                    <div><span class="text-xs font-bold uppercase text-cod-teal">{{ data_get($session->metadata, 'year', 'Sesión') }}</span><h2 class="mt-1 font-extrabold text-cod-navy">{{ $session->title }}</h2></div>
+                    @if($session->external_url || $session->document_path)<a href="{{ $session->external_url ?: asset('storage/'.$session->document_path) }}" target="_blank" rel="noopener" class="shrink-0 bg-cod-teal px-4 py-2 text-center text-sm font-bold text-white">Ver acta ↗</a>@endif
+                </article>
+            @empty
+                <p>No hay sesiones disponibles.</p>
+            @endforelse
+        </div>
+        <div class="mt-8">{{ $sessions->links() }}</div>
+    </section>
 @endsection

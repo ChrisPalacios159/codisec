@@ -24,7 +24,7 @@ class PublicSiteTest extends TestCase
         CodisecSession::create(['title' => 'Sesión de prueba', 'slug' => 'sesion-prueba', 'status' => 'published']);
         Page::create(['title' => 'CODISEC', 'slug' => 'codisec', 'status' => 'published']);
 
-        $this->get('/')->assertOk()->assertSee('Información clara');
+        $this->get('/')->assertOk()->assertSee('Un Surquillo más seguro');
         $this->get('/documentos')->assertOk()->assertSee('Plan de prueba');
         $this->get('/actividades')->assertOk()->assertSee('Actividad de prueba');
         $this->get('/sesiones')->assertOk()->assertSee('Sesión de prueba');
@@ -48,7 +48,7 @@ class PublicSiteTest extends TestCase
 
         $this->assertNotEmpty($navigation);
         $this->assertSame(1, substr_count($navigation[0], 'href="/seccion/directorio"'));
-        $this->assertSame(1, substr_count($navigation[0], '>Inicio</a>'));
+        $this->assertSame(1, substr_count($navigation[0], '>Inicio '));
     }
 
     public function test_maintenance_panel_requires_an_authorized_user(): void

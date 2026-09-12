@@ -1,14 +1,61 @@
 @extends('layouts.public')
+
 @section('title', 'CODISEC Surquillo | Seguridad Ciudadana')
+
 @section('content')
-<section class="relative overflow-hidden bg-cod-blue text-white">
-    <div class="absolute inset-0 opacity-20" style="background-image:radial-gradient(circle at 15% 30%,#5eead4 0,transparent 24%),radial-gradient(circle at 85% 20%,#f4b942 0,transparent 18%)"></div>
-    <div class="relative mx-auto grid max-w-7xl gap-10 px-4 py-20 sm:px-6 lg:grid-cols-[1.2fr_.8fr] lg:px-8 lg:py-28">
-        <div><span class="inline-flex rounded-full border border-white/25 bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-[.18em]">Seguridad ciudadana · Surquillo</span><h1 class="mt-6 max-w-3xl text-4xl font-black leading-tight sm:text-6xl">Información clara para un distrito más seguro.</h1><p class="mt-6 max-w-2xl text-lg leading-8 text-blue-100">Consulta planes, actas, evaluaciones, informes y actividades oficiales del CODISEC.</p><div class="mt-8 flex flex-wrap gap-3"><a href="{{ route('documents.index') }}" class="rounded-xl bg-cod-gold px-6 py-3 font-black text-cod-navy shadow-lg hover:bg-white">Explorar documentos</a><a href="{{ route('activities.index') }}" class="rounded-xl border border-white/40 px-6 py-3 font-bold hover:bg-white/10">Ver actividades</a></div></div>
-        <div class="grid content-center gap-4 sm:grid-cols-2"><div class="rounded-2xl border border-white/15 bg-white/10 p-6 backdrop-blur"><strong class="text-4xl font-black">{{ $documents->count() }}</strong><span class="mt-2 block text-sm text-blue-100">documentos recientes</span></div><div class="rounded-2xl border border-white/15 bg-white/10 p-6 backdrop-blur"><strong class="text-4xl font-black">{{ $categories->sum('documents_count') }}</strong><span class="mt-2 block text-sm text-blue-100">enlaces documentales migrados</span></div><a href="{{ route('sessions.index') }}" class="rounded-2xl bg-cod-teal p-6 sm:col-span-2"><span class="text-sm font-bold uppercase tracking-wide text-teal-100">Participación y acuerdos</span><strong class="mt-2 block text-2xl">Revisa las sesiones del comité →</strong></a></div>
-    </div>
-</section>
-<section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8"><span class="text-sm font-black uppercase tracking-[.16em] text-cod-teal">Acceso directo</span><h2 class="mt-2 text-3xl font-black text-cod-navy">Información por sección</h2><div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">@foreach($categories->take(8) as $category)<a href="{{ route('documents.index', ['categoria' => $category->slug]) }}" class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:border-cod-teal hover:shadow-md"><span class="text-xs font-bold text-cod-teal">{{ $category->documents_count }} documentos</span><h3 class="mt-2 font-bold text-cod-navy">{{ $category->name }}</h3></a>@endforeach</div></section>
-<section class="border-y border-slate-200 bg-white"><div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8"><div class="flex items-end justify-between"><div><span class="text-sm font-black uppercase tracking-[.16em] text-cod-teal">Repositorio</span><h2 class="mt-2 text-3xl font-black text-cod-navy">Documentos recientes</h2></div><a href="{{ route('documents.index') }}" class="hidden font-bold text-cod-teal sm:block">Ver todos →</a></div><div class="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-4">@forelse($documents as $document)<x-document-card :document="$document" />@empty<p class="text-slate-500">No hay documentos disponibles.</p>@endforelse</div></div></section>
-<section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8"><div class="flex items-end justify-between"><div><span class="text-sm font-black uppercase tracking-[.16em] text-cod-teal">Comunidad</span><h2 class="mt-2 text-3xl font-black text-cod-navy">Últimas actividades</h2></div><a href="{{ route('activities.index') }}" class="font-bold text-cod-teal">Ver todas →</a></div><div class="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">@forelse($activities as $activity)<article class="overflow-hidden rounded-2xl bg-white shadow-sm"><div class="h-2 bg-gradient-to-r from-cod-teal to-cod-gold"></div><div class="p-6">@if($activity->occurred_at)<time class="text-xs font-bold uppercase text-cod-teal">{{ $activity->occurred_at->translatedFormat('d M Y') }}</time>@endif<h3 class="mt-2 text-xl font-black text-cod-navy">{{ $activity->title }}</h3><p class="mt-3 line-clamp-3 text-sm leading-6 text-slate-600">{{ $activity->summary }}</p><a class="mt-5 inline-block font-bold text-cod-teal" href="{{ route('activities.show', $activity) }}">Leer actividad →</a></div></article>@empty<p class="text-slate-500">No hay actividades disponibles.</p>@endforelse</div></section>
+    <section class="home-intro">
+        <span class="section-kicker text-teal-200">Comité Distrital de Seguridad Ciudadana</span>
+        <h1 class="mt-3">Un Surquillo más seguro, informado y organizado.</h1>
+        <p>Consulta planes, actas, evaluaciones, informes y actividades oficiales del CODISEC.</p>
+        <div class="home-actions">
+            <a href="{{ route('documents.index') }}">Explorar documentos</a>
+            <a href="{{ route('activities.index') }}">Ver actividades</a>
+        </div>
+    </section>
+
+    <section class="public-content-card public-section">
+        <span class="section-kicker">Acceso directo</span>
+        <h2 class="section-title">Información por sección</h2>
+        <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            @foreach($categories->take(6) as $category)
+                <a href="{{ route('documents.index', ['categoria' => $category->slug]) }}" class="border border-slate-200 bg-slate-50 p-4 no-underline transition hover:border-cod-teal hover:bg-white">
+                    <span class="text-xs font-bold uppercase text-cod-teal">{{ $category->documents_count }} documentos</span>
+                    <h3 class="mt-1 font-extrabold text-cod-navy">{{ $category->name }}</h3>
+                </a>
+            @endforeach
+        </div>
+    </section>
+
+    <section class="public-content-card public-section">
+        <div class="flex flex-wrap items-end justify-between gap-3">
+            <div><span class="section-kicker">Repositorio</span><h2 class="section-title">Documentos recientes</h2></div>
+            <a href="{{ route('documents.index') }}" class="font-bold text-cod-teal">Ver todos →</a>
+        </div>
+        <div class="mt-6 grid gap-5 md:grid-cols-2">
+            @forelse($documents as $document)
+                <x-document-card :document="$document" />
+            @empty
+                <p>No hay documentos disponibles.</p>
+            @endforelse
+        </div>
+    </section>
+
+    @if($activities->isNotEmpty())
+        <section class="public-content-card public-section">
+            <div class="flex flex-wrap items-end justify-between gap-3">
+                <div><span class="section-kicker">Comunidad</span><h2 class="section-title">Últimas actividades</h2></div>
+                <a href="{{ route('activities.index') }}" class="font-bold text-cod-teal">Ver todas →</a>
+            </div>
+            <div class="mt-6 grid gap-5 md:grid-cols-2">
+                @foreach($activities->take(4) as $activity)
+                    <article class="border-l-4 border-cod-teal bg-slate-50 p-5">
+                        @if($activity->occurred_at)<time class="text-xs font-bold uppercase text-cod-teal">{{ $activity->occurred_at->translatedFormat('d M Y') }}</time>@endif
+                        <h3 class="mt-1 text-lg font-extrabold text-cod-navy">{{ $activity->title }}</h3>
+                        <p class="mt-2 line-clamp-3 text-sm leading-6">{{ $activity->summary }}</p>
+                        <a class="mt-3 inline-block font-bold text-cod-teal" href="{{ route('activities.show', $activity) }}">Leer actividad →</a>
+                    </article>
+                @endforeach
+            </div>
+        </section>
+    @endif
 @endsection
