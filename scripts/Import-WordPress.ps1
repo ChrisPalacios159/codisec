@@ -1,6 +1,6 @@
 param(
     [string]$WordPressRoot = 'Z:\inetpub\wwwroot\codisec',
-    [string]$SourceHost = '10.10.20.233',
+    [string]$SourceHost = '',
     [string]$PhpPath = 'C:\Users\Usuario\Tools\php-8.3.33\php.exe'
 )
 
@@ -16,6 +16,8 @@ function Read-WpDefine([string]$Name) {
     if (-not $Match.Success) { throw "No se encontró $Name en wp-config.php" }
     return $Match.Groups[1].Value
 }
+
+if (-not $SourceHost) { $SourceHost = Read-WpDefine 'DB_HOST' }
 
 $env:WORDPRESS_DB_HOST = $SourceHost
 $env:WORDPRESS_DB_PORT = '3306'
