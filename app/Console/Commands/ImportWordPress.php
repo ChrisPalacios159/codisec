@@ -308,7 +308,15 @@ class ImportWordPress extends Command
 
     private function importNavigation(): void
     {
-        $items = DB::connection('wordpress')->table($this->prefix.'posts')->where('post_type', 'nav_menu_item')->where('post_status', 'publish')->orderBy('menu_order')->get();
+        $itemsQuery = DB::connection('wordpress')->table($this->prefix.'posts as posts')
+            ->select('posts.*')
+            ->where('posts.post_type', 'nav_menu_item')
+            ->where('posts.post_status', 'publish');
+        if ($menuTaxonomyId = $this->mainMenuTaxonomyId()) {
+            $itemsQuery->join($this->prefix.'term_relationships as relationships', 'relationships.object_id', '=', 'posts.ID')
+                ->where('relationships.term_taxonomy_id', $menuTaxonomyId);
+        }
+        $items = $itemsQuery->orderBy('posts.menu_order')->orderBy('posts.ID')->get();
         $metas = DB::connection('wordpress')->table($this->prefix.'postmeta')
             ->whereIn('post_id', $items->pluck('ID'))
             ->whereIn('meta_key', ['_menu_item_object_id', '_menu_item_menu_item_parent', '_menu_item_url', '_menu_item_target'])
@@ -332,6 +340,23 @@ class ImportWordPress extends Command
                 $created[$item->ID]->update(['parent_id' => $created[$parentWordPressId]->id]);
             }
         }
+    }
+
+    private function mainMenuTaxonomyId(): ?int
+    {
+        $stylesheet = DB::connection('wordpress')->table($this->prefix.'options')->where('option_name', 'stylesheet')->value('option_value');
+        if (! $stylesheet) {
+            return null;
+        }
+        $serialized = DB::connection('wordpress')->table($this->prefix.'options')->where('option_name', 'theme_mods_'.$stylesheet)->value('option_value');
+        $themeMods = $serialized ? @unserialize($serialized, ['allowed_classes' => false]) : null;
+        $termId = is_array($themeMods) ? (int) data_get($themeMods, 'nav_menu_locations.main', 0) : 0;
+        if (! $termId) {
+            return null;
+        }
+        $taxonomyId = DB::connection('wordpress')->table($this->prefix.'term_taxonomy')->where('taxonomy', 'nav_menu')->where('term_id', $termId)->value('term_taxonomy_id');
+
+        return $taxonomyId ? (int) $taxonomyId : null;
     }
 
     private function seedSettings(): void
@@ -371,6 +396,9 @@ class ImportWordPress extends Command
     private function normalizeUrl(string $url): string
     {
         $url = trim($url);
+        if (preg_match('#^https?://(www\.)?munisurquillo\.gob\.pe/codisec/?$#i', $url)) {
+            return '/';
+        }
         $url = preg_replace('#^https?://(www\.)?munisurquillo\.gob\.pe/codisec/wp-content/uploads/#i', '/storage/legacy/', $url) ?? $url;
 
         return str_replace(' ', '%20', $url);

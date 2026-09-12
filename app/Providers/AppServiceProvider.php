@@ -25,7 +25,9 @@ class AppServiceProvider extends ServiceProvider
         View::composer('layouts.public', function ($view) {
             $navigation = collect();
             if (Schema::hasTable('navigation_items')) {
-                $navigation = NavigationItem::query()->where('is_active', true)->whereNull('parent_id')->with('children')->orderBy('sort_order')->get();
+                $navigation = NavigationItem::query()->where('is_active', true)->orderBy('sort_order')->orderBy('id')->get()
+                    ->unique(fn (NavigationItem $item) => mb_strtolower(rtrim($item->url, '/')))
+                    ->values();
             }
             $view->with('navigation', $navigation);
         });
