@@ -98,10 +98,16 @@ class ConnectHandler(socketserver.StreamRequestHandler):
                 if exceptional or not readable:
                     return
                 for source in readable:
-                    data = source.recv(65536)
+                    try:
+                        data = source.recv(65536)
+                    except OSError:
+                        return
                     if not data:
                         return
-                    (remote if source is self.connection else self.connection).sendall(data)
+                    try:
+                        (remote if source is self.connection else self.connection).sendall(data)
+                    except OSError:
+                        return
         finally:
             remote.close()
 
