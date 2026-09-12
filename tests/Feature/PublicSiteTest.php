@@ -24,7 +24,12 @@ class PublicSiteTest extends TestCase
         CodisecSession::create(['title' => 'Sesión de prueba', 'slug' => 'sesion-prueba', 'status' => 'published']);
         Page::create(['title' => 'CODISEC', 'slug' => 'codisec', 'status' => 'published']);
 
-        $this->get('/')->assertOk()->assertSee('Un Surquillo más seguro');
+        $this->get('/')
+            ->assertOk()
+            ->assertSee('Un Surquillo más seguro')
+            ->assertSee('Boletines Estadísticos')
+            ->assertSee('Informes Trimestrales de Seguimiento')
+            ->assertSee('Informes Trimestrales de Cumplimiento');
         $this->get('/documentos')->assertOk()->assertSee('Plan de prueba');
         $this->get('/actividades')->assertOk()->assertSee('Actividad de prueba');
         $this->get('/sesiones')->assertOk()->assertSee('Sesión de prueba');

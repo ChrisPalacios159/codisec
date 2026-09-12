@@ -20,6 +20,17 @@
         $mainNavigation = $navigation
             ->whereNull('parent_id')
             ->reject(fn ($item) => $item->url === '/' || mb_strtolower(trim($item->label)) === 'inicio');
+        $secondaryNavigation = collect([
+            ['label' => 'Boletines Estadísticos', 'url' => '/seccion/boletines-estadisticos', 'target' => '_self'],
+            ['label' => 'Informes Trimestrales de Seguimiento', 'url' => '/seccion/informes-trimestrales-de-seguimiento', 'target' => '_self'],
+            ['label' => 'Informes Trimestrales de Cumplimiento', 'url' => '/seccion/informes-trimestrales-de-cumplimiento', 'target' => '_self'],
+        ]);
+        $sectionNavigation = $navigation
+            ->reject(fn ($item) => $item->url === '/' || mb_strtolower(trim($item->label)) === 'inicio')
+            ->map(fn ($item) => ['label' => $item->label, 'url' => $item->url, 'target' => $item->target])
+            ->concat($secondaryNavigation)
+            ->unique('url')
+            ->values();
     @endphp
 
     <header class="public-header">
@@ -65,9 +76,8 @@
 
         <nav data-mobile-menu class="public-mobile-navigation hidden" aria-label="Navegación móvil">
             <a href="{{ route('home') }}">Inicio</a>
-            @foreach($navigation as $item)
-                @continue($item->url === '/' || mb_strtolower(trim($item->label)) === 'inicio')
-                <a href="{{ $item->url }}" target="{{ $item->target }}">{{ $item->label }}</a>
+            @foreach($sectionNavigation as $item)
+                <a href="{{ $item['url'] }}" target="{{ $item['target'] }}">{{ $item['label'] }}</a>
             @endforeach
             <a href="{{ route('documents.index') }}">Documentos</a>
             <a href="{{ route('contact.create') }}">Contacto</a>
@@ -80,9 +90,8 @@
                 <div class="sidebar-widget">
                     <h2><span class="sidebar-menu-icon" aria-hidden="true">☰</span> Inicio</h2>
                     <nav>
-                        @foreach($navigation as $item)
-                            @continue($item->url === '/' || mb_strtolower(trim($item->label)) === 'inicio')
-                            <a href="{{ $item->url }}" target="{{ $item->target }}" @class(['active' => request()->getPathInfo() === $item->url, 'sidebar-child' => $item->url === '/seccion/normas-legales'])>{{ $item->label }}</a>
+                        @foreach($sectionNavigation as $item)
+                            <a href="{{ $item['url'] }}" target="{{ $item['target'] }}" @class(['active' => request()->getPathInfo() === $item['url'], 'sidebar-child' => $item['url'] === '/seccion/normas-legales'])>{{ $item['label'] }}</a>
                         @endforeach
                     </nav>
                 </div>
