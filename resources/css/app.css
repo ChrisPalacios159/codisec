@@ -4,6 +4,26 @@
 @source '../../storage/framework/views/*.php';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans: 'Segoe UI', ui-sans-serif, system-ui, sans-serif;
+    --color-cod-blue: #123d68;
+    --color-cod-navy: #092744;
+    --color-cod-teal: #008d91;
+    --color-cod-gold: #f4b942;
 }
+
+html { scroll-behavior: smooth; }
+body { background: #f5f7fa; color: #1f2937; }
+.content-body { color: #374151; line-height: 1.8; }
+.content-body h1, .content-body h2, .content-body h3 { color: #123d68; font-weight: 750; line-height: 1.2; margin: 1.8rem 0 .75rem; }
+.content-body h1 { font-size: 1.8rem; }
+.content-body h2 { font-size: 1.45rem; }
+.content-body h3 { font-size: 1.2rem; }
+.content-body p { margin: .8rem 0; }
+.content-body ul, .content-body ol { margin: 1rem 0; padding-left: 1.5rem; }
+.content-body ul { list-style: disc; }
+.content-body ol { list-style: decimal; }
+.content-body a { color: #00777b; text-decoration: underline; text-underline-offset: 3px; }
+.content-body img { border-radius: .75rem; margin: 1.25rem auto; max-width: 100%; height: auto; }
+.content-body table { display: block; max-width: 100%; overflow-x: auto; border-collapse: collapse; margin: 1rem 0; }
+.content-body td, .content-body th { border: 1px solid #d1d5db; padding: .65rem; }
+.content-body hr { border-color: #dbe3eb; margin: 2rem 0; }
