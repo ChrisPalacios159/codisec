@@ -95,12 +95,6 @@
                         @endforeach
                     </nav>
                 </div>
-                <div class="sidebar-widget sidebar-document-widget">
-                    <h2>Información pública</h2>
-                    <p>Consulta planes, actas, evaluaciones e informes oficiales del CODISEC.</p>
-                    <a href="{{ route('documents.index') }}" class="sidebar-button">Ver documentos</a>
-                    <a href="{{ route('contact.create') }}" class="sidebar-contact">Contacto ciudadano</a>
-                </div>
             </aside>
 
             <div class="public-main">
