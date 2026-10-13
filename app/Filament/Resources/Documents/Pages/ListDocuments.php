@@ -13,7 +13,15 @@ class ListDocuments extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            CreateAction::make()
+                ->url(function (): string {
+                    $categoryId = data_get($this->tableFilters, 'document_category_id.value');
+
+                    return static::getResource()::getUrl(
+                        'create',
+                        array_filter(['category' => $categoryId]),
+                    );
+                }),
         ];
     }
 }

@@ -3,9 +3,9 @@
 namespace App\Filament\Resources\MediaAssets\Pages;
 
 use App\Filament\Resources\MediaAssets\MediaAssetResource;
-use Filament\Resources\Pages\CreateRecord;
+use App\Filament\Support\ConfirmedCreateRecord;
 
-class CreateMediaAsset extends CreateRecord
+class CreateMediaAsset extends ConfirmedCreateRecord
 {
     protected static string $resource = MediaAssetResource::class;
 }

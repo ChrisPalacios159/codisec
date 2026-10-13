@@ -3,9 +3,9 @@
 namespace App\Filament\Resources\Activities\Pages;
 
 use App\Filament\Resources\Activities\ActivityResource;
-use Filament\Resources\Pages\CreateRecord;
+use App\Filament\Support\ConfirmedCreateRecord;
 
-class CreateActivity extends CreateRecord
+class CreateActivity extends ConfirmedCreateRecord
 {
     protected static string $resource = ActivityResource::class;
 }

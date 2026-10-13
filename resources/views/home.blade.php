@@ -2,60 +2,33 @@
 
 @section('title', 'CODISEC Surquillo | Seguridad Ciudadana')
 
+@section('sidebar_after')
+    <div class="sidebar-widget sidebar-status-widget">
+        <p>No hay documentos en este momento.</p>
+    </div>
+@endsection
+
 @section('content')
-    <section class="home-intro">
-        <span class="section-kicker text-teal-200">Comité Distrital de Seguridad Ciudadana</span>
-        <h1 class="mt-3">Un Surquillo más seguro, informado y organizado.</h1>
-        <p>Consulta planes, actas, evaluaciones, informes y actividades oficiales del CODISEC.</p>
-        <div class="home-actions">
-            <a href="{{ route('documents.index') }}">Explorar documentos</a>
-            <a href="{{ route('activities.index') }}">Ver actividades</a>
-        </div>
-    </section>
+    <h1 class="sr-only">Un Surquillo más seguro, informado y organizado.</h1>
 
-    <section class="public-content-card public-section">
-        <span class="section-kicker">Acceso directo</span>
-        <h2 class="section-title">Información por sección</h2>
-        <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            @foreach($categories->take(6) as $category)
-                <a href="{{ route('documents.index', ['categoria' => $category->slug]) }}" class="border border-slate-200 bg-slate-50 p-4 no-underline transition hover:border-cod-teal hover:bg-white">
-                    <span class="text-xs font-bold uppercase text-cod-teal">{{ $category->documents_count }} documentos</span>
-                    <h3 class="mt-1 font-extrabold text-cod-navy">{{ $category->name }}</h3>
-                </a>
-            @endforeach
-        </div>
-    </section>
+    <article class="home-featured">
+        <img
+            src="{{ asset('storage/legacy/2016/07/cuatro-2.jpg') }}"
+            alt="Autoridades y representantes de seguridad ciudadana reunidos en la plaza de Surquillo"
+            class="home-featured-image"
+        >
 
-    <section class="public-content-card public-section">
-        <div class="flex flex-wrap items-end justify-between gap-3">
-            <div><span class="section-kicker">Repositorio</span><h2 class="section-title">Documentos recientes</h2></div>
-            <a href="{{ route('documents.index') }}" class="font-bold text-cod-teal">Ver todos →</a>
+        <div class="home-featured-body">
+            <p>Aquí podrás ver toda la información brindada por el Comité Distrital de Seguridad Ciudadana hacia los habitantes del distrito de Surquillo.</p>
+            <time datetime="2022-01-14" class="home-featured-date">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                    <circle cx="12" cy="12" r="9" />
+                    <path d="M12 7v5l3 2" />
+                </svg>
+                14 Enero, 2022
+            </time>
         </div>
-        <div class="mt-6 grid gap-5 md:grid-cols-2">
-            @forelse($documents as $document)
-                <x-document-card :document="$document" />
-            @empty
-                <p>No hay documentos disponibles.</p>
-            @endforelse
-        </div>
-    </section>
+    </article>
 
-    @if($activities->isNotEmpty())
-        <section class="public-content-card public-section">
-            <div class="flex flex-wrap items-end justify-between gap-3">
-                <div><span class="section-kicker">Comunidad</span><h2 class="section-title">Últimas actividades</h2></div>
-                <a href="{{ route('activities.index') }}" class="font-bold text-cod-teal">Ver todas →</a>
-            </div>
-            <div class="mt-6 grid gap-5 md:grid-cols-2">
-                @foreach($activities->take(4) as $activity)
-                    <article class="border-l-4 border-cod-teal bg-slate-50 p-5">
-                        @if($activity->occurred_at)<time class="text-xs font-bold uppercase text-cod-teal">{{ $activity->occurred_at->translatedFormat('d M Y') }}</time>@endif
-                        <h3 class="mt-1 text-lg font-extrabold text-cod-navy">{{ $activity->title }}</h3>
-                        <p class="mt-2 line-clamp-3 text-sm leading-6">{{ $activity->summary }}</p>
-                        <a class="mt-3 inline-block font-bold text-cod-teal" href="{{ route('activities.show', $activity) }}">Leer actividad →</a>
-                    </article>
-                @endforeach
-            </div>
-        </section>
-    @endif
+    <div class="home-content-spacer" aria-hidden="true"></div>
 @endsection

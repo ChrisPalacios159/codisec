@@ -16,31 +16,51 @@ class PagesTable
     {
         return $table
             ->columns([
-                TextColumn::make('wordpress_id')
-                    ->numeric()
-                    ->sortable(),
                 TextColumn::make('title')
+                    ->label('Título')
                     ->searchable(),
                 TextColumn::make('slug')
-                    ->searchable(),
+                    ->label('Dirección web')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('status')
-                    ->searchable(),
+                    ->label('Estado')
+                    ->badge()
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'published' => 'Publicado',
+                        'draft' => 'Borrador',
+                        default => $state,
+                    })
+                    ->color(fn (string $state): string => $state === 'published' ? 'success' : 'warning'),
                 TextColumn::make('template')
-                    ->searchable(),
+                    ->label('Tipo de página')
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'default' => 'Página informativa',
+                        'actividades' => 'Actividades',
+                        'sesiones' => 'Sesiones',
+                        default => $state,
+                    }),
                 TextColumn::make('menu_order')
+                    ->label('Orden')
                     ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 IconColumn::make('is_featured')
+                    ->label('En portada')
                     ->boolean(),
                 TextColumn::make('published_at')
-                    ->dateTime()
-                    ->sortable(),
+                    ->label('Fecha de publicación')
+                    ->dateTime('d/m/Y H:i')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('created_at')
-                    ->dateTime()
+                    ->label('Creado')
+                    ->dateTime('d/m/Y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
-                    ->dateTime()
+                    ->label('Última modificación')
+                    ->dateTime('d/m/Y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])

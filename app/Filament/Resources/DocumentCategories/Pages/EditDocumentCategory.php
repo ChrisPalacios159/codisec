@@ -3,11 +3,11 @@
 namespace App\Filament\Resources\DocumentCategories\Pages;
 
 use App\Filament\Resources\DocumentCategories\DocumentCategoryResource;
+use App\Filament\Support\ConfirmedEditRecord;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\ViewAction;
-use Filament\Resources\Pages\EditRecord;
 
-class EditDocumentCategory extends EditRecord
+class EditDocumentCategory extends ConfirmedEditRecord
 {
     protected static string $resource = DocumentCategoryResource::class;
 

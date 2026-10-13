@@ -16,26 +16,34 @@ class NavigationItemsTable
     {
         return $table
             ->columns([
-                TextColumn::make('wordpress_id')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('parent.id')
-                    ->searchable(),
                 TextColumn::make('label')
+                    ->label('Texto del menú')
                     ->searchable(),
+                TextColumn::make('url')
+                    ->label('Destino')
+                    ->searchable(),
+                TextColumn::make('parent.label')
+                    ->label('Pertenece a')
+                    ->placeholder('Menú principal'),
                 TextColumn::make('target')
-                    ->searchable(),
+                    ->label('Modo de apertura')
+                    ->formatStateUsing(fn (string $state): string => $state === '_blank' ? 'Nueva pestaña' : 'Misma pestaña')
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('sort_order')
+                    ->label('Orden')
                     ->numeric()
                     ->sortable(),
                 IconColumn::make('is_active')
+                    ->label('Visible')
                     ->boolean(),
                 TextColumn::make('created_at')
-                    ->dateTime()
+                    ->label('Creado')
+                    ->dateTime('d/m/Y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
-                    ->dateTime()
+                    ->label('Última modificación')
+                    ->dateTime('d/m/Y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])

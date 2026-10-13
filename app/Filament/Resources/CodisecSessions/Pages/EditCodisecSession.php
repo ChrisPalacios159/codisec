@@ -3,11 +3,11 @@
 namespace App\Filament\Resources\CodisecSessions\Pages;
 
 use App\Filament\Resources\CodisecSessions\CodisecSessionResource;
+use App\Filament\Support\ConfirmedEditRecord;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\ViewAction;
-use Filament\Resources\Pages\EditRecord;
 
-class EditCodisecSession extends EditRecord
+class EditCodisecSession extends ConfirmedEditRecord
 {
     protected static string $resource = CodisecSessionResource::class;
 

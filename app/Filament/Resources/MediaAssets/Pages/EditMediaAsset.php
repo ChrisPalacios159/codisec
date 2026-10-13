@@ -3,11 +3,11 @@
 namespace App\Filament\Resources\MediaAssets\Pages;
 
 use App\Filament\Resources\MediaAssets\MediaAssetResource;
+use App\Filament\Support\ConfirmedEditRecord;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\ViewAction;
-use Filament\Resources\Pages\EditRecord;
 
-class EditMediaAsset extends EditRecord
+class EditMediaAsset extends ConfirmedEditRecord
 {
     protected static string $resource = MediaAssetResource::class;
 

@@ -14,6 +14,14 @@ const mediaTitle = `Medio ${token}`;
 const editorEmail = `${token}-editor@example.test`;
 const editorPassword = `Editor!${Date.now()}`;
 const updatedSiteName = `CODISEC validado ${token}`;
+const documentModules = [
+    ['normas-legales', 'Normas Legales'],
+    ['evaluacion-de-desempeno', 'Evaluación de Desempeño'],
+    ['plan-local-de-seguridad-ciudadana', 'Plan Local de Seguridad Ciudadana'],
+    ['boletines-estadisticos', 'Boletines Estadísticos'],
+    ['informes-trimestrales-de-seguimiento', 'Informes Trimestrales de Seguimiento'],
+    ['informes-trimestrales-de-cumplimiento', 'Informes Trimestrales de Cumplimiento'],
+];
 let originalSiteNameBase64 = '';
 
 const pdfBuffer = Buffer.from(`%PDF-1.4
@@ -97,8 +105,10 @@ function cleanTestRecords() {
         : '';
     artisan(`
         ${restoreSetting}
-        $document = App\\Models\\Document::where('slug', '${documentSlug}')->first();
-        if ($document) { if ($document->file_path) { Illuminate\\Support\\Facades\\Storage::disk('public')->delete($document->file_path); } $document->delete(); }
+        App\\Models\\Document::where('slug', 'like', '${token}-%')->get()->each(function ($document) {
+            if ($document->file_path) { Illuminate\\Support\\Facades\\Storage::disk('public')->delete($document->file_path); }
+            $document->delete();
+        });
         $activity = App\\Models\\Activity::where('slug', '${activitySlug}')->first();
         if ($activity) { if ($activity->cover_image) { Illuminate\\Support\\Facades\\Storage::disk('public')->delete($activity->cover_image); } $activity->delete(); }
         $session = App\\Models\\CodisecSession::where('slug', '${sessionSlug}')->first();
@@ -128,6 +138,69 @@ test('sitio público responde y el menú móvil funciona', async ({ page }) => {
     await page.getByRole('button', { name: 'Abrir menú' }).click();
     await expect(page.getByRole('navigation', { name: 'Navegación móvil' })).toBeVisible();
     await expect(page.getByRole('navigation', { name: 'Navegación móvil' }).getByText('Directorio')).toBeVisible();
+});
+
+test('panel muestra diez módulos y cada sección documental guarda en su categoría', async ({ page }) => {
+    test.setTimeout(300_000);
+    await login(page);
+
+    const modules = page.locator('[data-content-module]');
+    await expect(modules).toHaveCount(10);
+
+    const expectedModules = [
+        ['codisec', 'CODISEC'],
+        ...documentModules.slice(0, 1),
+        ['directorio', 'Directorio'],
+        ['sesiones', 'Sesiones'],
+        ...documentModules.slice(1, 2),
+        ['actividades', 'Actividades y Buenas Prácticas'],
+        ...documentModules.slice(2),
+    ];
+
+    for (const [slug, title] of expectedModules) {
+        await expect(page.locator(`[data-content-module="${slug}"]`)).toContainText(title);
+    }
+
+    for (const pageModuleSlug of ['codisec', 'directorio']) {
+        const pageRecord = JSON.parse(artisan(`echo json_encode(App\\Models\\Page::where('slug', '${pageModuleSlug}')->firstOrFail(['id', 'excerpt'])->toArray());`));
+        const originalExcerpt = Buffer.from(pageRecord.excerpt || '', 'utf8').toString('base64');
+        const testExcerpt = `Edición validada ${token} ${pageModuleSlug}`;
+
+        try {
+            const editUrl = await page.locator(`[data-content-module="${pageModuleSlug}"]`).getByRole('link', { name: 'Administrar' }).getAttribute('href');
+            await page.goto(editUrl);
+            await page.locator('[id="form.excerpt"]').fill(testExcerpt);
+            await saveRecord(page);
+            expect(artisan(`echo App\\Models\\Page::findOrFail(${pageRecord.id})->excerpt;`)).toBe(testExcerpt);
+        } finally {
+            artisan(`App\\Models\\Page::findOrFail(${pageRecord.id})->update(['excerpt' => base64_decode('${originalExcerpt}')]);`);
+        }
+
+        await page.goto('/admin');
+    }
+
+    for (const [categorySlug, categoryName] of documentModules) {
+        const card = page.locator(`[data-content-module="${categorySlug}"]`);
+        const createUrl = await card.getByRole('link', { name: 'Agregar contenido' }).getAttribute('href');
+        expect(createUrl).toBeTruthy();
+        await page.goto(createUrl);
+
+        const sectionField = page.getByLabel('Sección del sitio');
+        await expect(sectionField).toBeDisabled();
+        await expect(sectionField).toContainText(categoryName);
+
+        const moduleDocumentSlug = `${token}-${categorySlug}`;
+        await page.locator('[id="form.title"]').fill(`Prueba ${categoryName} ${token}`);
+        await page.locator('[id="form.slug"]').fill(moduleDocumentSlug);
+        await page.locator('[id="form.status"]').selectOption('published');
+        await page.locator('[id="form.external_url"]').fill(`https://example.test/${moduleDocumentSlug}.pdf`);
+        await createRecord(page, 'documents');
+
+        const storedCategory = artisan(`echo App\\Models\\Document::where('slug', '${moduleDocumentSlug}')->firstOrFail()->category->slug;`);
+        expect(storedCategory).toBe(categorySlug);
+
+        await page.goto('/admin');
+    }
 });
 
 test('mantenimiento guarda, actualiza y publica contenido con archivos', async ({ page, request, browser }) => {
@@ -164,7 +237,7 @@ test('mantenimiento guarda, actualiza y publica contenido con archivos', async (
         await page.locator('[id="form.slug"]').fill(categorySlug);
         await page.locator('[id="form.description"]').fill(`Categoría de validación ${token}`);
         await page.locator('[id="form.sort_order"]').fill('0');
-        await setSwitch(page, 'Is active', true);
+        await setSwitch(page, 'Sección activa', true);
         await createRecord(page, 'document-categories');
     });
 
@@ -172,7 +245,7 @@ test('mantenimiento guarda, actualiza y publica contenido con archivos', async (
         await page.goto('/admin/documents/create');
         await page.locator('[id="form.title"]').fill(`Documento ${token}`);
         await page.locator('[id="form.slug"]').fill(documentSlug);
-        await page.getByLabel('Categoría').click();
+        await page.getByLabel('Sección del sitio').click();
         await page.getByRole('option', { name: `Categoría ${token}` }).click();
         await page.locator('[id="form.status"]').selectOption('published');
         await page.getByRole('textbox', { name: 'Descripción' }).fill(`Descripción pública ${token}`);
@@ -232,7 +305,7 @@ test('mantenimiento guarda, actualiza y publica contenido con archivos', async (
         await page.locator('[id="form.url"]').fill(`/seccion/${pageSlug}`);
         await page.locator('[id="form.target"]').fill('_self');
         await page.locator('[id="form.sort_order"]').fill('999');
-        await setSwitch(page, 'Is active', true);
+        await setSwitch(page, 'Enlace activo', true);
         await createRecord(page, 'navigation-items');
         await publicPage.goto('/');
         await expect(publicPage.getByText(navigationLabel, { exact: true }).first()).toBeVisible();

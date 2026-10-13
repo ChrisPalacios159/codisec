@@ -16,17 +16,32 @@ class SiteSettingsTable
         return $table
             ->columns([
                 TextColumn::make('key')
+                    ->label('Dato del sitio')
+                    ->searchable(),
+                TextColumn::make('value')
+                    ->label('Contenido')
+                    ->limit(60)
                     ->searchable(),
                 TextColumn::make('type')
-                    ->searchable(),
+                    ->label('Tipo')
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'text' => 'Texto',
+                        'textarea' => 'Texto largo',
+                        'url' => 'Enlace',
+                        default => $state,
+                    })
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('group')
-                    ->searchable(),
+                    ->label('Grupo')
+                    ->formatStateUsing(fn (string $state): string => $state === 'general' ? 'General' : $state),
                 TextColumn::make('created_at')
-                    ->dateTime()
+                    ->label('Creado')
+                    ->dateTime('d/m/Y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
-                    ->dateTime()
+                    ->label('Última modificación')
+                    ->dateTime('d/m/Y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\ContactMessages\Tables;
 
+use App\Models\ContactMessage;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -16,25 +17,30 @@ class ContactMessagesTable
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->searchable(),
-                TextColumn::make('email')
-                    ->label('Email address')
-                    ->searchable(),
-                TextColumn::make('phone')
+                    ->label('Nombre')
                     ->searchable(),
                 TextColumn::make('subject')
+                    ->label('Asunto')
                     ->searchable(),
                 TextColumn::make('read_at')
-                    ->dateTime()
-                    ->sortable(),
-                TextColumn::make('status')
+                    ->label('Lectura')
+                    ->state(fn (ContactMessage $record): string => $record->read_at ? 'Leído' : 'Pendiente')
+                    ->badge()
+                    ->color(fn (string $state): string => $state === 'Leído' ? 'success' : 'warning'),
+                TextColumn::make('email')
+                    ->label('Correo electrónico')
                     ->searchable(),
-                TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
+                TextColumn::make('phone')
+                    ->label('Teléfono')
+                    ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('created_at')
+                    ->label('Recibido')
+                    ->dateTime('d/m/Y H:i')
+                    ->sortable(),
                 TextColumn::make('updated_at')
-                    ->dateTime()
+                    ->label('Última modificación')
+                    ->dateTime('d/m/Y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])

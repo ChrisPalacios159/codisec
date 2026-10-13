@@ -3,9 +3,9 @@
 namespace App\Filament\Resources\Users\Pages;
 
 use App\Filament\Resources\Users\UserResource;
-use Filament\Resources\Pages\CreateRecord;
+use App\Filament\Support\ConfirmedCreateRecord;
 
-class CreateUser extends CreateRecord
+class CreateUser extends ConfirmedCreateRecord
 {
     protected static string $resource = UserResource::class;
 }

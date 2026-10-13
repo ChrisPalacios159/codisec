@@ -3,11 +3,11 @@
 namespace App\Filament\Resources\Pages\Pages;
 
 use App\Filament\Resources\Pages\PageResource;
+use App\Filament\Support\ConfirmedEditRecord;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\ViewAction;
-use Filament\Resources\Pages\EditRecord;
 
-class EditPage extends EditRecord
+class EditPage extends ConfirmedEditRecord
 {
     protected static string $resource = PageResource::class;
 

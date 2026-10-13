@@ -13,14 +13,18 @@ class SiteSettingForm
         return $schema
             ->components([
                 TextInput::make('key')
+                    ->label('Dato del sitio')
                     ->required(),
                 Textarea::make('value')
+                    ->label('Contenido')
                     ->default(null)
                     ->columnSpanFull(),
                 TextInput::make('type')
+                    ->label('Tipo de dato')
                     ->required()
                     ->default('text'),
                 TextInput::make('group')
+                    ->label('Grupo')
                     ->required()
                     ->default('general'),
             ]);

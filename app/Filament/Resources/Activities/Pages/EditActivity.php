@@ -3,11 +3,11 @@
 namespace App\Filament\Resources\Activities\Pages;
 
 use App\Filament\Resources\Activities\ActivityResource;
+use App\Filament\Support\ConfirmedEditRecord;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\ViewAction;
-use Filament\Resources\Pages\EditRecord;
 
-class EditActivity extends EditRecord
+class EditActivity extends ConfirmedEditRecord
 {
     protected static string $resource = ActivityResource::class;
 

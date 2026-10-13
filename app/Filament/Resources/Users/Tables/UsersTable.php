@@ -17,23 +17,31 @@ class UsersTable
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->label('Nombre')
                     ->searchable(),
                 TextColumn::make('email')
-                    ->label('Email address')
+                    ->label('Correo electrónico')
                     ->searchable(),
                 TextColumn::make('role')
-                    ->searchable(),
+                    ->label('Perfil')
+                    ->badge()
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'administrator' => 'Administrador',
+                        'editor' => 'Editor',
+                        default => $state,
+                    })
+                    ->color(fn (string $state): string => $state === 'administrator' ? 'primary' : 'gray'),
                 IconColumn::make('is_active')
+                    ->label('Puede ingresar')
                     ->boolean(),
-                TextColumn::make('email_verified_at')
-                    ->dateTime()
-                    ->sortable(),
                 TextColumn::make('created_at')
-                    ->dateTime()
+                    ->label('Creado')
+                    ->dateTime('d/m/Y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
-                    ->dateTime()
+                    ->label('Última modificación')
+                    ->dateTime('d/m/Y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])

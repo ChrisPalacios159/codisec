@@ -15,24 +15,30 @@ class CodisecSessionsTable
     {
         return $table
             ->columns([
-                TextColumn::make('wordpress_id')
-                    ->numeric()
-                    ->sortable(),
                 TextColumn::make('title')
-                    ->searchable(),
-                TextColumn::make('slug')
+                    ->label('Título')
                     ->searchable(),
                 TextColumn::make('session_date')
-                    ->date()
+                    ->label('Fecha de la sesión')
+                    ->date('d/m/Y')
                     ->sortable(),
                 TextColumn::make('status')
-                    ->searchable(),
+                    ->label('Estado')
+                    ->badge()
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'published' => 'Publicado',
+                        'draft' => 'Borrador',
+                        default => $state,
+                    })
+                    ->color(fn (string $state): string => $state === 'published' ? 'success' : 'warning'),
                 TextColumn::make('created_at')
-                    ->dateTime()
+                    ->label('Creado')
+                    ->dateTime('d/m/Y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
-                    ->dateTime()
+                    ->label('Última modificación')
+                    ->dateTime('d/m/Y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])

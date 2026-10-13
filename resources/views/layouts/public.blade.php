@@ -95,6 +95,7 @@
                         @endforeach
                     </nav>
                 </div>
+                @yield('sidebar_after')
             </aside>
 
             <div class="public-main">
@@ -115,9 +116,52 @@
     </main>
 
     <footer class="public-footer">
-        <div class="public-container footer-inner">
-            <p>© {{ date('Y') }} {{ $siteSettings->get('municipality', 'Municipalidad Distrital de Surquillo') }} · {{ $siteSettings->get('site_name', 'CODISEC Surquillo') }}</p>
-            <nav aria-label="Enlaces del pie"><a href="{{ route('documents.index') }}">Documentos</a><a href="{{ route('contact.create') }}">Contacto</a><a href="{{ url('/admin') }}">Mantenimiento</a></nav>
+        <div class="public-container footer-columns">
+            <section class="footer-about">
+                <h2>{{ $siteSettings->get('site_name', 'CODISEC Surquillo') }}</h2>
+                <p>El Comité Distrital de Seguridad Ciudadana (CODISEC) es una instancia de diálogo, coordinación y elaboración de políticas, planes, programas, directivas y actividades vinculadas a la seguridad ciudadana en el ámbito distrital.</p>
+            </section>
+
+            <section>
+                <h2 class="footer-heading">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M7 3H4a1 1 0 0 0-1 1c0 9.39 7.61 17 17 17a1 1 0 0 0 1-1v-3l-4-2-2 2c-3.5-1.5-6.5-4.5-8-8l2-2-2-4Z" /></svg>
+                    Teléfonos
+                </h2>
+                <dl class="footer-phones">
+                    <div><dt>Central Telefónica<br>Municipalidad de Surquillo</dt><dd>(01) 241-0413</dd></div>
+                    <div><dt>Seguridad Ciudadana</dt><dd>(01) 510-2062</dd></div>
+                    <div><dt>Serenazgo de Surquillo</dt><dd>*7000</dd></div>
+                </dl>
+            </section>
+
+            <section>
+                <h2 class="footer-heading">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M15.5 9.5a4 4 0 1 0 0 5V8.7 3.3 0 1 0 2.1 5.9" /></svg>
+                    Únete a nuestra lista de correo
+                </h2>
+                <p>Recibe las últimas noticias sobre seguridad ciudadana de nuestro amado distrito.</p>
+                <form action="{{ route('contact.create') }}" method="get" class="footer-subscribe">
+                    <label for="footer-email" class="sr-only">Tu correo electrónico</label>
+                    <input id="footer-email" name="email" type="email" placeholder="Tu correo electrónico">
+                    <button type="submit" aria-label="Ir a contacto">›</button>
+                </form>
+            </section>
+
+            <section>
+                <h2 class="footer-heading">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="1" /><path d="m4 7 8 6 8-6" /></svg>
+                    Dirección de la Municipalidad
+                </h2>
+                <address>Jr. Manuel Iribarren 155<br>Surquillo<br>Lima 34</address>
+                <p>Central Telefónica: 241-0413</p>
+            </section>
+        </div>
+
+        <div class="footer-bottom">
+            <div class="public-container">
+                <p>© {{ date('Y') }} CODISEC</p>
+                <nav aria-label="Enlaces del pie"><a href="{{ route('documents.index') }}">Documentos</a><a href="{{ route('contact.create') }}">Contacto</a><a href="{{ url('/admin') }}">Mantenimiento</a></nav>
+            </div>
         </div>
     </footer>
 </body>

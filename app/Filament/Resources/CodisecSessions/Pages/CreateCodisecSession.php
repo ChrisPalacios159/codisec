@@ -3,9 +3,9 @@
 namespace App\Filament\Resources\CodisecSessions\Pages;
 
 use App\Filament\Resources\CodisecSessions\CodisecSessionResource;
-use Filament\Resources\Pages\CreateRecord;
+use App\Filament\Support\ConfirmedCreateRecord;
 
-class CreateCodisecSession extends CreateRecord
+class CreateCodisecSession extends ConfirmedCreateRecord
 {
     protected static string $resource = CodisecSessionResource::class;
 }

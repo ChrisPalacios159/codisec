@@ -3,11 +3,11 @@
 namespace App\Filament\Resources\SiteSettings\Pages;
 
 use App\Filament\Resources\SiteSettings\SiteSettingResource;
+use App\Filament\Support\ConfirmedEditRecord;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\ViewAction;
-use Filament\Resources\Pages\EditRecord;
 
-class EditSiteSetting extends EditRecord
+class EditSiteSetting extends ConfirmedEditRecord
 {
     protected static string $resource = SiteSettingResource::class;
 
